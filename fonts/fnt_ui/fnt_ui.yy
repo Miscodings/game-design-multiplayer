@@ -1259,8 +1259,8 @@
   "maintainGms1Font":false,
   "name":"fnt_ui",
   "parent":{
-    "name":"GameDesignMultiplayer",
-    "path":"GameDesignMultiplayer.yyp",
+    "name":"fonts",
+    "path":"folders/fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

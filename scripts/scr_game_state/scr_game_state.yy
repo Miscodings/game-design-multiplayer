@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_game_state",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_game_state",
+  "parent":{
+    "name":"core",
+    "path":"folders/scripts/core.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

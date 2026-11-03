@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_gate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_gate",
+  "parent":{
+    "name":"linked",
+    "path":"folders/scripts/linked.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

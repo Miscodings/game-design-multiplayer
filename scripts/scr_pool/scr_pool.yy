@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_pool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_pool",
+  "parent":{
+    "name":"hazards",
+    "path":"folders/scripts/hazards.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

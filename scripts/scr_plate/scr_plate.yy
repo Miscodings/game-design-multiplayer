@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_plate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_plate",
+  "parent":{
+    "name":"linked",
+    "path":"folders/scripts/linked.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

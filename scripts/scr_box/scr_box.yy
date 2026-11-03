@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_box",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_box",
+  "parent":{
+    "name":"linked",
+    "path":"folders/scripts/linked.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
