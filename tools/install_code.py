@@ -171,7 +171,7 @@ switch (kind) {
     case 1: terrain_draw(_d); deco_draw(_d); break;
     case 2: fx_draw(_d); break;
 }""",
-})
+}, props=[("kind", 0)])
 write_object("obj_coin", "level", None, {
     "create": "dim   = dim_of_y(y);\nphase = irandom(120);",
     "step": "if (!game_is_playing()) exit;\ncoin_update();",
@@ -186,4 +186,6 @@ write_object("obj_tip", "level", None, {
     "create": "// kind picks what the tip shows (see scr_tips). Drawn in GUI space by tips_draw_gui().\ndim = dim_of_y(y);",
 }, props=[("kind", "move")], visible=False)
 
+# variables passed in the struct of instance_create_*() must be declared (silences GM2064)
+add_props("obj_echo", [("source_player", 0)])
 print("installed")
