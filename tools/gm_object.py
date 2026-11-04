@@ -124,7 +124,10 @@ def add_props(name, props):
         if '"name":"%s","rangeEnabled"' % k in s:
             continue
         marker = '  ],\n  "resourceType":"GMObject"'
-        s = s.replace(marker, _prop_json(k, v) + marker, 1)
+        if '  "properties":[],\n' in s:
+            s = s.replace('  "properties":[],\n', '  "properties":[\n' + _prop_json(k, v) + '  ],\n', 1)
+        else:
+            s = s.replace(marker, _prop_json(k, v) + marker, 1)
     open(p, "w", encoding="utf8", newline="\n").write(s)
 
 
