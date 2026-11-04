@@ -35,14 +35,16 @@ function hud_gem(_x, _y, _col, _s = 1) {
     draw_set_alpha(1);
 }
 
-function fail_text(_reason) {
+/// @desc Headline for the fail panel: who went down and how ("P1 was caught"). Falls back to "A hero" if unknown.
+function fail_headline(_reason, _player) {
+    var _who = (_player == 0) ? "P1" : ((_player == 1) ? "P2" : "A hero");
     switch (_reason) {
-        case FAIL.HAZARD: return "A hazard got you";
-        case FAIL.ENEMY:  return "Caught by an enemy";
-        case FAIL.FALL:   return "Someone fell";
-        case FAIL.CRUSH:  return "Crushed";
+        case FAIL.HAZARD: return _who + " hit a hazard";
+        case FAIL.ENEMY:  return _who + " was caught";
+        case FAIL.FALL:   return _who + " fell";
+        case FAIL.CRUSH:  return _who + " was crushed";
     }
-    return "";
+    return _who + " went down";
 }
 
 function hud_draw() {
@@ -130,9 +132,9 @@ function hud_draw() {
             draw_set_halign(fa_center);
             draw_set_valign(fa_middle);
             draw_set_colour(make_colour_rgb(255, 120, 100));
-            ui_text_shadow(_gw / 2, _mid - 38, "YOU BOTH FELL", true);
+            ui_text_shadow(_gw / 2, _mid - 38, fail_headline(global.fail_reason, global.fail_player), true);
             draw_set_colour(make_colour_rgb(230, 220, 235));
-            ui_text(_gw / 2, _mid + 2, fail_text(global.fail_reason));
+            ui_text(_gw / 2, _mid + 2, "One falls, you both fall");
             draw_set_colour(c_white);
             ui_text(_gw / 2, _mid + 40, cp_active() ? "Enter: Retry from checkpoint     R: Restart level" : "Press Enter to try again");
         }
