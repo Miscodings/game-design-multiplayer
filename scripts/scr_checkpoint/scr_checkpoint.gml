@@ -76,33 +76,26 @@ function checkpoint_update() {
         cp_check(id);
     }
     var _lit = reached && (idx <= global.cp.idx);
-    if (_lit) light_add(x, y - 14, 40, 0.8);
-    else if (reached) light_add(x, y - 14, 24, 0.5);
+    if (_lit) light_add(x, y - 8, 44, 0.9);
+    else light_add(x, y - 6, 14, 0.35);
 }
 
 function checkpoint_draw() {
     var _lit = reached && (idx <= global.cp.idx);
     var _acc = global.theme[dim].accent;
-    var _wave = sin(global.frame * 0.12);
-    // pole
-    draw_set_colour(make_colour_rgb(40, 32, 44));
-    draw_rectangle(x - 1, y - 26, x, y, false);
-    draw_set_colour(make_colour_rgb(150, 140, 160));
-    draw_rectangle(x - 1, y - 26, x - 1, y, false);
-    // cap
-    draw_set_colour(_lit ? c_white : make_colour_rgb(150, 140, 160));
-    draw_rectangle(x - 2, y - 28, x + 0, y - 27, false);
-    // cloth: grey until both heroes have passed, then the world's colour, waving
-    var _col = _lit ? _acc : (reached ? merge_colour(_acc, make_colour_rgb(90, 84, 100), 0.6) : make_colour_rgb(90, 84, 100));
-    draw_set_colour(_col);
-    for (var i = 0; i < 9; i++) {
-        var _h = 9 - i * 0.8;
-        var _w = _lit ? round(_wave * (i * 0.12)) : 0;
-        draw_rectangle(x + 1 + i, y - 26 + _w, x + 1 + i, y - 26 + _h + _w, false);
-    }
+    var _a = global.art[dim];
+    var _pulse = 0.5 + 0.5 * sin(global.frame * 0.1);
     if (_lit) {
+        // a lit campfire
         gpu_set_blendmode(bm_add);
-        draw_sprite_ext(spr_light, 0, x, y - 16, 0.2, 0.2, 0, _acc, 0.3 + 0.08 * _wave);
+        draw_sprite_ext(spr_light, 0, x, y - 8, 0.5, 0.5, 0, _acc, 0.35 + 0.08 * _pulse);
+        gpu_set_blendmode(bm_normal);
+        if (sprite_exists(_a.camp_on)) draw_sprite_ext(_a.camp_on, floor(global.frame * 0.25 + idx * 3) mod 10, x, y, ART_S, ART_S, 0, c_white, 1);
+    } else {
+        // cold logs, with a faint ring that pulses so the spot reads as something to reach
+        if (sprite_exists(_a.camp_off)) draw_sprite_ext(_a.camp_off, 0, x, y, ART_S, ART_S, 0, c_white, 1);
+        gpu_set_blendmode(bm_add);
+        draw_sprite_ext(spr_light, 0, x, y - 6, 0.22, 0.22, 0, _acc, 0.12 + 0.1 * _pulse);
         gpu_set_blendmode(bm_normal);
     }
     draw_set_colour(c_white);

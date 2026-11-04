@@ -23,6 +23,8 @@ function art_init() {
             portal: asset_get_index("spr_portal_" + _k),
             torch:  asset_get_index("spr_torch_" + _k),
             plank:  asset_get_index("spr_plank_" + _k),
+            camp_off: asset_get_index("spr_camp_off_" + _k),
+            camp_on:  asset_get_index("spr_camp_on_" + _k),
             slime:  asset_get_index("spr_slime_" + _k),
             coin:   asset_get_index("spr_coin_" + _k),
             dust:   (d == 0) ? make_colour_rgb(228, 214, 190) : make_colour_rgb(255, 120, 70),
@@ -137,6 +139,11 @@ function terrain_draw(_dim) {
                 terr_at(cx, cy - 1, _dim), terr_at(cx, cy + 1, _dim),
                 terr_at(cx - 1, cy, _dim), terr_at(cx + 1, cy, _dim),
                 terr_at(cx - 1, cy - 1, _dim), terr_at(cx + 1, cy - 1, _dim));
+            // plain earth comes in textured variants (row 6 of the sheet), picked by cell so a wall never repeats evenly
+            if (_t == 17) {
+                var _v = art_hash(cx, cy + _dim * 1000) mod 8;
+                if (_v < 6) _t = _v + 6 * 16;
+            }
             draw_sprite_part_ext(_spr, 0, (_t mod 16) * ART_TILE, (_t div 16) * ART_TILE, ART_TILE, ART_TILE,
                                  cx * TILE, cy * TILE, ART_S, ART_S, c_white, 1);
         }

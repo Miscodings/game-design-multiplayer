@@ -124,18 +124,22 @@ function platform_draw() {
     var _spr = global.art[dim].plank;
     var _l = bbox_left;
     var _r = bbox_right + 1;
+    var _t = bbox_top;
     if (!sprite_exists(_spr)) { draw_self(); return; }
-    // three boards stacked (each 3 units tall), darker towards the underside, tiled one board per tile
-    var _tints = [c_white, make_colour_rgb(205, 190, 190), make_colour_rgb(150, 136, 142)];
+    // the slab fills the whole collision box (16 tall): five boards, one per 3 units, darker towards the underside,
+    // so what you see is exactly what you can stand on
+    var _tints = [c_white, make_colour_rgb(222, 208, 208), make_colour_rgb(184, 170, 172), make_colour_rgb(150, 138, 142), make_colour_rgb(118, 108, 114)];
     for (var xx = _l; xx < _r; xx += 16) {
-        for (var i = 0; i < 3; i++) {
-            draw_sprite_ext(_spr, 0, xx, y + i * 3, ART_S, ART_S, 0, _tints[i], 1);
+        for (var i = 0; i < 5; i++) {
+            draw_sprite_ext(_spr, 0, xx, _t + i * 3, ART_S, ART_S, 0, _tints[i], 1);
         }
     }
+    draw_set_colour(make_colour_rgb(18, 12, 20));
+    draw_rectangle(_l, _t + 15, _r - 1, _t + 15, false);
     // a lit edge on top so a moving platform reads as "alive"
     draw_set_colour(global.theme[dim].accent);
     draw_set_alpha(0.55);
-    draw_rectangle(_l + 1, y, _r - 2, y, false);
+    draw_rectangle(_l + 1, _t, _r - 2, _t, false);
     draw_set_alpha(1);
     draw_set_colour(c_white);
 }

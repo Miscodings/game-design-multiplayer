@@ -121,8 +121,9 @@ function tip_lines(_x, _y, _lines, _dim, _min_w = 0, _extra_h = 0) {
     var _h = 38 + 18 * _n + _extra_h;
     tip_plate(_x, _y, _w, _h, _dim);
     // text block sits at the bottom of the plate
-    var _ty = _y + _h / 2 - 19 - 9 * (_n - 1);
-    for (var i = 0; i < _n; i++) tip_text(_x, _ty + i * 18, _lines[i], _dim);
+    var _area = 38 + 18 * _n;                    // the part of the plate the text uses (keycaps take the rest, above)
+    var _mid = _y + _h / 2 - _area / 2;          // centre of the text block
+    for (var i = 0; i < _n; i++) tip_text(_x, _mid + (i - (_n - 1) / 2) * 18 - 1, _lines[i], _dim);
 }
 
 function tip_draw(_kind, _x, _y, _dim) {
@@ -132,17 +133,17 @@ function tip_draw(_kind, _x, _y, _dim) {
 
     switch (_kind) {
         case "move":
-            tip_lines(_x, _y + 0, ["move  and  jump"], _dim, 240, 28);
+            tip_lines(_x, _y + 0, ["move  and  jump"], _dim, 240, 44);
             var _p = _t mod 2.6;
-            tip_key(_x - 80, _y - 18, _k[0], 36, _p > 1.5 && _p < 2.0, _dim);
-            tip_key(_x - 38, _y - 18, _k[1], 36, _p > 0.1 && _p < 1.1, _dim);
-            tip_key(_x + 36, _y - 18, _k[2], _jw, _p > 1.2 && _p < 1.45, _dim);
+            tip_key(_x - 80, _y - 26, _k[0], 36, _p > 1.5 && _p < 2.0, _dim);
+            tip_key(_x - 38, _y - 26, _k[1], 36, _p > 0.1 && _p < 1.1, _dim);
+            tip_key(_x + 36, _y - 26, _k[2], _jw, _p > 1.2 && _p < 1.45, _dim);
             break;
 
         case "jump":
-            tip_lines(_x, _y, ["hold  for  a  higher  jump"], _dim, 170, 28);
+            tip_lines(_x, _y, ["hold  for  a  higher  jump"], _dim, 170, 44);
             var _q = _t mod 2.0;
-            tip_key(_x, _y - 18, _k[2], _jw, _q < 0.5, _dim);
+            tip_key(_x, _y - 26, _k[2], _jw, _q < 0.5, _dim);
             break;
 
         case "stomp":   tip_lines(_x, _y, ["jump  on  its  head"], _dim); break;

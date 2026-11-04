@@ -69,15 +69,74 @@ def crop_alpha(im):
 
 
 # ---------------------------------------------------------------- terrain
+EARTH_VARIANTS = 6
+
+
+def with_earth_variants(sheet, ember):
+    """The plain-earth tile (1,1) is a flat block of colour, which makes big walls look empty. Adds a row of
+    EARTH_VARIANTS textured copies (pebbles, cracks, and for the underworld glowing veins) under the 9 x 6 sheet.
+    Features wrap around the tile edges so the variants tile seamlessly next to each other and next to tile (1,1)."""
+    import random
+    base_tile = sheet.crop((32, 32, 64, 64))
+    arr = np.array(base_tile)
+    flat = arr.reshape(-1, 4)
+    vals, counts = np.unique(flat, axis=0, return_counts=True)
+    base = vals[counts.argmax()][:3].astype(np.int32)
+    out = Image.new("RGBA", (sheet.width, sheet.height + 32), (0, 0, 0, 0))
+    out.paste(sheet, (0, 0))
+
+    def shade(k):
+        return tuple(int(v) for v in np.clip(base * k + (6 if k > 1 else 0), 0, 255))
+
+    for v in range(EARTH_VARIANTS):
+        rnd = random.Random(1000 + v + (50 if ember else 0))
+        t = np.array(base_tile)
+
+        def put(x, y, col):
+            t[y % 32, x % 32] = (*col, 255)
+
+        # pebbles: a lit top edge and a dark underside
+        for _ in range(7):
+            x, y = rnd.randrange(32), rnd.randrange(32)
+            w, h = rnd.choice([(2, 1), (3, 2), (2, 2), (3, 1)])
+            for dx in range(w):
+                for dy in range(h):
+                    put(x + dx, y + dy, shade(1.55 if dy == 0 else 1.25))
+            for dx in range(w):
+                put(x + dx, y + h, shade(0.55))
+        # a couple of cracks
+        for _ in range(2):
+            x, y = rnd.randrange(32), rnd.randrange(32)
+            for _s in range(rnd.randint(4, 8)):
+                put(x, y, shade(0.5))
+                x += rnd.choice([-1, 0, 1, 1])
+                y += rnd.choice([0, 1, 1])
+        # specks
+        for _ in range(14):
+            put(rnd.randrange(32), rnd.randrange(32), shade(rnd.choice([0.75, 1.3])))
+        if ember:
+            # embers glowing in the cracks of the underworld rock
+            for _ in range(3):
+                x, y = rnd.randrange(32), rnd.randrange(32)
+                put(x, y, (255, 150, 60))
+                put(x + 1, y, (190, 50, 30))
+                put(x, y + 1, (150, 34, 26))
+        out.paste(Image.fromarray(t, "RGBA"), (v * 32, sheet.height))
+    return out
+
+
 def terrain():
     # Floor Tiles1: three seasons, 6 tile rows each. Block 0 is green grass, block 1 autumn.
     sheet = load(os.path.join(PLAT, "Floor Tiles1.png"))
     green = sheet.crop((0, 0, 288, 192))
     autumn = sheet.crop((0, 192, 288, 384))
+    hell = gradient_map(autumn, HELL_GROUND, lum_gamma=0.9)
+    green = with_earth_variants(green, ember=False)
+    hell = with_earth_variants(hell, ember=True)
     write_sprite("spr_ground_o", [green], 0, 0)
-    write_sprite("spr_ground_u", [gradient_map(autumn, HELL_GROUND, lum_gamma=0.9)], 0, 0)
+    write_sprite("spr_ground_u", [hell], 0, 0)
     green.save(os.path.join(PREVIEW, "ground_o.png"))
-    gradient_map(autumn, HELL_GROUND, lum_gamma=0.9).save(os.path.join(PREVIEW, "ground_u.png"))
+    hell.save(os.path.join(PREVIEW, "ground_u.png"))
 
     # wooden moving platform strips (Other Tiles1 row 6: 5 plank pieces, 32 px wide, ~12 px tall)
     other = load(os.path.join(PLAT, "Other Tiles1.png"))
@@ -120,8 +179,8 @@ def frames_from(sheet):
     for r, n in rows:
         for c in range(n):
             f = sheet.crop((c * 80, r * 64, c * 80 + 80, r * 64 + 64))
-            if r == 2:   # the run row of the pack faces left; every other row faces right
-                f = f.transpose(Image.FLIP_LEFT_RIGHT)
+            # the pack's characters face left; the game draws them facing right (and mirrors them for left)
+            f = f.transpose(Image.FLIP_LEFT_RIGHT)
             out.append(f)
     return out
 
@@ -196,6 +255,18 @@ def props(planks):
     fr = [tor.crop((i * 32, 32, i * 32 + 32, 64)) for i in range(6)]
     write_sprite("spr_torch_o", fr, 16, 32)
     write_sprite("spr_torch_u", [gradient_map(f, HELL_FIRE, lum_gamma=0.9) for f in fr], 16, 32)
+
+    # checkpoint campfire: unlit = just the log pile, lit = the 10 animated flame frames (Campfire sheet: 5 x 8 of 32 px)
+    camp = load(os.path.join(PLAT, "Animated Sprites", "Campfire sheet.png"))
+    cf = [camp.crop(((i % 5) * 32, (i // 5) * 32, (i % 5) * 32 + 32, (i // 5) * 32 + 32)) for i in range(10, 20)]
+    logs = camp.crop((0, 0, 32, 32))
+    arr = np.array(logs)
+    arr[:27] = 0
+    logs = Image.fromarray(arr, "RGBA")
+    write_sprite("spr_camp_off_o", [logs], 16, 32)
+    write_sprite("spr_camp_on_o", cf, 16, 32)
+    write_sprite("spr_camp_off_u", [gradient_map(logs, HELL_GROUND, lum_gamma=0.8)], 16, 32)
+    write_sprite("spr_camp_on_u", [gradient_map(f, HELL_FIRE, lum_gamma=0.9) for f in cf], 16, 32)
 
     # exit portals (10 frames, 64 x 64)
     port = load(os.path.join(PLAT, "Animated Sprites", "GandalfHardcore Portal sheet.png"))
