@@ -27,6 +27,7 @@ class Level:
         self.plats = {}       # digit -> dict(signal=, tx=, ty=, speed=)
         self.pools = {}       # char -> dict(signal=, partner=, radius=)
         self.lamp_radius = {}
+        self.coin_pts = []    # (band, col, row): coins are an overlay, so they can sit inside pits
 
     # --- drawing helpers
     def set(self, b, c, r, ch):
@@ -56,11 +57,11 @@ class Level:
 
     def coins(self, b, pts):
         for c, r in pts:
-            self.set(b, c, r, "o")
+            self.coin_pts.append((b, c, r))
 
     def line_coins(self, b, c0, c1, r, step=2):
         for c in range(c0, c1 + 1, step):
-            self.set(b, c, r, "o")
+            self.coin_pts.append((b, c, r))
 
     def tip(self, b, c, r, kind):
         self.tips.append((b, c, r, kind))
@@ -202,6 +203,8 @@ def build_room(L):
                 elif ch in "abcd":
                     d = L.plates.get(ch, {})
                     add("logic", "obj_plate", x, y + 12, 1, 1, [("signal_id", ch), ("latch", d.get("latch", 0)), ("activator", d.get("activator", 0))])
+    for b, c, r in L.coin_pts:
+        add("logic", "obj_coin", c * TILE + 8, (b * BAND + r) * TILE + 8)
     for b, c0, c1, f in L.dark:
         add("logic", "obj_dark_zone", c0 * TILE, b * BAND * TILE, c1 - c0, BAND, [("feather", f)])
     for b, c, r, kind in L.tips:
@@ -252,6 +255,9 @@ def preview(L, path):
                 if col is None:
                     col = (200, 200, 200) if ch.islower() else ((230, 120, 200) if ch.isupper() else (255, 160, 220))
                 dr.rectangle([c * s, oy + r * s, c * s + s - 1, oy + r * s + s - 1], fill=col)
+        for bb, c, r in L.coin_pts:
+            if bb == b:
+                dr.rectangle([c * s + 2, oy + r * s + 2, c * s + s - 3, oy + r * s + s - 3], fill=(255, 215, 60))
         for bb, c0, c1, f in L.dark:
             if bb == b:
                 dr.rectangle([c0 * s, oy, c1 * s, oy + BAND * s], outline=(255, 0, 255))
