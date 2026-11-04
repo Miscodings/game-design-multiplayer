@@ -49,7 +49,14 @@ function cameras_follow() {
         var _p = global.players[i];
         if (!instance_exists(_p)) continue;
         var _tx = clamp(floor(_p.x) - VIEW_W / 2, 0, max(0, room_width - VIEW_W));
-        camera_set_view_pos(global.cams[i], _tx, dim_view_top(i));
+        // screen shake: sideways either way, upward only (the band's top 12 pixels are spare, below it is the next world)
+        var _sx = 0;
+        var _sy = 0;
+        if (variable_global_exists("shake") && global.shake > 0) {
+            _sx = round(random_range(-1, 1) * global.shake);
+            _sy = -round(random(1) * global.shake);
+        }
+        camera_set_view_pos(global.cams[i], _tx + _sx, dim_view_top(i) + max(_sy, -12));
     }
 }
 

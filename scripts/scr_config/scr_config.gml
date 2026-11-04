@@ -1,7 +1,7 @@
 // scr_config: layout constants and enums. Change the layout here, not in the objects.
 
 // Draws debug helpers (hazard zones, etc.)
-#macro DEBUG        true
+#macro DEBUG        false
 
 // Grid size in pixels
 #macro TILE         16

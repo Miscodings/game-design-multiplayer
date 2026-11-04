@@ -20,6 +20,8 @@ function pool_update() {
         }
     }
 
+    if (dim == 1 && !drained) light_add((bbox_left + bbox_right) / 2, bbox_top, (bbox_right - bbox_left) / 2 + 30, 0.55);
+
     var _p = instance_place(x, y, obj_player);
     if (_p != noone && !pool_is_safe_at(_p.x)) game_fail(FAIL.HAZARD, _p);
 }
@@ -30,32 +32,43 @@ function pool_is_safe_at(_px) {
     return window_timer > 0 && abs(_px - window_cx) <= safe_radius;
 }
 
+/// @desc One stretch of liquid. Water in the overworld, lava in the underworld; both have a rippling lit surface.
+function pool_fill(_x1, _x2, _top, _bot, _surface) {
+    if (_x2 <= _x1) return;
+    var _lava = (dim == 1);
+    var _body = _lava ? make_colour_rgb(214, 70, 28)  : make_colour_rgb(44, 112, 200);
+    var _deep = _lava ? make_colour_rgb(150, 32, 24)  : make_colour_rgb(28, 78, 160);
+    var _foam = _lava ? make_colour_rgb(255, 196, 90) : make_colour_rgb(176, 220, 255);
+    draw_set_alpha(_lava ? 1 : 0.88);
+    draw_set_colour(_body);
+    draw_rectangle(_x1, _top, _x2, _bot, false);
+    draw_set_colour(_deep);
+    draw_rectangle(_x1, (_top + _bot) div 2 + 1, _x2, _bot, false);
+    if (_surface) {
+        draw_set_colour(_foam);
+        for (var xx = _x1; xx <= _x2; xx += 2) {
+            var _w = round(sin((xx + global.frame * 0.6) * 0.4));
+            draw_rectangle(xx, _top + _w, min(xx + 1, _x2), _top + _w, false);
+        }
+    }
+    draw_set_alpha(1);
+}
+
 function pool_draw() {
     var _l = bbox_left;
     var _r = bbox_right;
     var _t = bbox_top;
     var _b = bbox_bottom;
-    var _water = make_colour_rgb(56, 124, 214);
-    var _foam  = make_colour_rgb(170, 210, 250);
-
-    draw_set_alpha(0.8);
-    draw_set_colour(_water);
     if (drained) {
-        draw_rectangle(_l, _b - 2, _r, _b, false);
+        pool_fill(_l, _r, _b - 1, _b, false);
     } else if (window_timer > 0) {
         var _a = clamp(window_cx - safe_radius, _l, _r);
         var _c = clamp(window_cx + safe_radius, _l, _r);
-        if (_a > _l) draw_rectangle(_l, _t, _a - 1, _b, false);
-        if (_c < _r) draw_rectangle(_c + 1, _t, _r, _b, false);
-        draw_rectangle(_a, _b - 2, _c, _b, false);
-        draw_set_colour(_foam);
-        if (_a > _l) draw_rectangle(_l, _t, _a - 1, _t, false);
-        if (_c < _r) draw_rectangle(_c + 1, _t, _r, _t, false);
+        if (_a > _l) pool_fill(_l, _a - 1, _t, _b, true);
+        if (_c < _r) pool_fill(_c + 1, _r, _t, _b, true);
+        pool_fill(_a, _c, _b - 1, _b, false);
     } else {
-        draw_rectangle(_l, _t, _r, _b, false);
-        draw_set_colour(_foam);
-        draw_rectangle(_l, _t, _r, _t, false);
+        pool_fill(_l, _r, _t, _b, true);
     }
-    draw_set_alpha(1);
     draw_set_colour(c_white);
 }

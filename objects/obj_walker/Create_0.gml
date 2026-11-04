@@ -9,4 +9,3 @@ dim         = dim_of_y(y);
 grounded    = false;
 if (dir == 0) dir = 1;
 image_xscale = dir;
-image_blend  = make_colour_rgb(232, 92, 92);

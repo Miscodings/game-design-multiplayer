@@ -26,7 +26,11 @@ function player_move() {
     jump_buffer_timer = input.jump_pressed ? jump_buffer_frames : max(jump_buffer_timer - 1, 0);
 
     // gravity
-    yspd = min(yspd + grav, max_fall);
+    // lighter at the top of a jump (hang time), heavier on the way down (snappy landings)
+    var _g = grav;
+    if (abs(yspd) < 0.9 && input.jump_held) _g *= 0.6;
+    else if (yspd > 0) _g *= 1.25;
+    yspd = min(yspd + _g, max_fall);
 
     // jump
     if (jump_buffer_timer > 0 && coyote_timer > 0) {

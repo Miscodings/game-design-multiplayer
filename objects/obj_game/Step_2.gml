@@ -2,3 +2,4 @@
 game_update();
 signals_swap();
 cameras_follow();
+fx_update();

@@ -22,3 +22,4 @@ coyote_timer      = 0;
 jump_buffer_timer = 0;
 push_timer        = 0;
 image_blend       = global.theme[dim].accent;
+player_art_init();

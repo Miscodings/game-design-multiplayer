@@ -1,1 +1,1 @@
-draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, global.theme[dim].solid, 1);
+// Terrain is drawn as autotiles by obj_art (see scr_art). Plain solids draw nothing themselves.

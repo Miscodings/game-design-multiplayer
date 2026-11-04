@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_props",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_props",
+  "parent":{
+    "name":"world",
+    "path":"folders/scripts/world.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

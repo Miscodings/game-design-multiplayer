@@ -55,11 +55,13 @@ function echo_draw() {
     // particles are the colour of the player they stand for (the same colour as that player's square)
     if (!instance_exists(source_player)) return;
     draw_set_colour(source_player.image_blend);
+    gpu_set_blendmode(bm_add);
     for (var i = 0; i < array_length(motes); i++) {
         var _m = motes[i];
-        draw_set_alpha(0.35 * (1 - _m.life / _m.span));
+        draw_set_alpha(0.7 * (1 - _m.life / _m.span));
         draw_circle(_m.x, _m.y, _m.sz, false);
     }
+    gpu_set_blendmode(bm_normal);
     draw_set_alpha(1);
     draw_set_colour(c_white);
 }

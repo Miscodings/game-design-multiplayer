@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_art",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_art",
+  "parent":{
+    "name":"world",
+    "path":"folders/scripts/world.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

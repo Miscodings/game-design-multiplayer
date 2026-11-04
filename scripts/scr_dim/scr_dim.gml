@@ -29,10 +29,11 @@ function player_partner(_id) {
     return global.players[1 - _id];
 }
 
-/// @desc Placeholder colours per dimension. Swap for real art / tileset themes later.
+/// @desc Colours per dimension. Dimension 0 is the overworld (gold), dimension 1 the underworld (ember).
+/// bg / solid are fallbacks; the real look comes from the art in scr_art. accent drives lights, UI and particles.
 function theme_init() {
     global.theme = [
-        { bg: make_colour_rgb(40, 34, 58), solid: make_colour_rgb(112, 94, 142), accent: make_colour_rgb(246, 202, 122) },
-        { bg: make_colour_rgb(16, 40, 48), solid: make_colour_rgb(54, 112, 122),  accent: make_colour_rgb(134, 226, 216) }
+        { bg: make_colour_rgb(120, 170, 190), solid: make_colour_rgb(60, 52, 40),  accent: make_colour_rgb(255, 214, 120) },
+        { bg: make_colour_rgb(70, 14, 28),    solid: make_colour_rgb(60, 20, 26),  accent: make_colour_rgb(255, 104, 66)  }
     ];
 }
