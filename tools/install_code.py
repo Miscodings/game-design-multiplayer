@@ -178,7 +178,7 @@ write_object("obj_coin", "level", None, {
     "draw": "coin_draw();",
 })
 write_object("obj_checkpoint", "level", None, {
-    "create": "// idx (a property) orders the flags in a level. Both worlds have one with the same idx.\ndim = dim_of_y(y - 1);\nreached = false;",
+    "create": "// idx (a property) orders the flags in a level. Both worlds have one with the same idx.\nidx = real(idx);\ndim = dim_of_y(y - 1);\nreached = false;",
     "step": "checkpoint_update();",
     "draw": "checkpoint_draw();",
 }, props=[("idx", 0)])
