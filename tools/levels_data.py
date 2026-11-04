@@ -225,11 +225,11 @@ def level6():
     # overworld water: cross it while your partner walks beside you
     L.pit(0, 28, 38, "W")
     L.tip(0, 22, 4, "water")
-    L.coins(0, [(31, 9), (33, 9), (35, 9)])
+    L.coins(0, [(31, 10), (33, 10), (35, 10)])
     # underworld lava
     L.pit(1, 60, 70, "W")
     L.tip(1, 54, 4, "water")
-    L.coins(1, [(63, 9), (65, 9), (67, 9)])
+    L.coins(1, [(63, 10), (65, 10), (67, 10)])
     # drained by plates
     L.pit(0, 86, 94, "V")
     L.pools["V"] = {"signal": "a", "partner": 0}
@@ -246,8 +246,8 @@ def level6():
     L.ground(1, 40, 48, top=9)
     L.line_coins(0, 8, 14, 9, 3)
     L.line_coins(1, 8, 14, 9, 3)
-    L.coins(0, [(45, 8), (47, 8), (49, 8), (88, 9), (90, 9), (92, 9)])
-    L.coins(1, [(41, 8), (43, 8), (45, 8), (98, 9), (100, 9), (102, 9)])
+    L.coins(0, [(45, 8), (47, 8), (49, 8), (88, 10), (90, 10), (92, 10)])
+    L.coins(1, [(41, 8), (43, 8), (45, 8), (98, 10), (100, 10), (102, 10)])
     for b in (0, 1):
         L.tip(b, 6, 5, "move")
         L.tip(b, 110, 4, "exit")
@@ -327,8 +327,8 @@ def level8():
     # --- C: cross the water together (cols 88-112)
     L.pit(0, 90, 99, "W")
     L.pit(1, 100, 109, "W")
-    L.coins(0, [(93, 9), (95, 9), (97, 9)])
-    L.coins(1, [(103, 9), (105, 9), (107, 9)])
+    L.coins(0, [(93, 10), (95, 10), (97, 10)])
+    L.coins(1, [(103, 10), (105, 10), (107, 10)])
     # --- D: plates, gate and a platform (cols 114-148)
     L.set(0, 116, 9, "a")
     L.rect(1, 122, 123, 5, 9, "A")

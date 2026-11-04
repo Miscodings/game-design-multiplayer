@@ -59,7 +59,7 @@ function fx_ambient() {
         var _vy = camera_get_view_y(_cam);
         if (d == 1) {
             if (irandom(5) == 0) {
-                fx_emit(_vx + random(VIEW_W), _vy + VIEW_H + 2, random_range(-0.15, 0.25), random_range(-0.7, -0.3), irandom_range(90, 170),
+                fx_emit(_vx + random(VIEW_W), _vy + VIEW_H - random_range(30, 60), random_range(-0.15, 0.25), random_range(-0.7, -0.3), irandom_range(90, 170),
                         random_range(0.8, 1.6), make_colour_rgb(255, irandom_range(80, 170), 40), 0, true);
             }
         } else {
