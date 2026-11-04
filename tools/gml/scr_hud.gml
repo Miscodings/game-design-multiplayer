@@ -5,7 +5,10 @@
 // at half scale stays sharp on the 1280 x 720 GUI. Alignment is set by the caller.
 function ui_text(_x, _y, _str, _big = false) {
     draw_set_font(_big ? fnt_title : fnt_ui);
-    draw_text_transformed(_x, _y, _str, 0.5, 0.5, 0);
+    // the glyphs are baked at 2x, so filter them down (nearest sampling makes them ragged) and keep them on whole pixels
+    gpu_set_texfilter(true);
+    draw_text_transformed(floor(_x), floor(_y), _str, 0.5, 0.5, 0);
+    gpu_set_texfilter(false);
 }
 
 /// @desc Text with a dark drop shadow, in the current colour.
@@ -119,6 +122,17 @@ function hud_draw() {
         draw_set_alpha(1);
     }
 
+    // checkpoint toast, over the divider's top edge of the overworld, fading out
+    if (global.cp_flash > 0 && global.game_state == GAME_STATE.PLAYING) {
+        var _fa = min(1, global.cp_flash / 30);
+        draw_set_alpha(_fa);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_colour(make_colour_rgb(255, 236, 190));
+        ui_text_shadow(_gw / 2, 58, "CHECKPOINT");
+        draw_set_alpha(1);
+    }
+
     if (global.game_state == GAME_STATE.FAILED) {
         // the dead player's view is highlighted red for the whole fail screen: a strong flash that settles
         // to a steady tint (both views if we don't know who it was)
@@ -137,7 +151,7 @@ function hud_draw() {
             draw_set_colour(make_colour_rgb(230, 220, 235));
             ui_text(_gw / 2, _mid + 2, fail_text(global.fail_reason));
             draw_set_colour(c_white);
-            ui_text(_gw / 2, _mid + 40, "Press Enter to try again");
+            ui_text(_gw / 2, _mid + 40, cp_active() ? "Enter: retry from checkpoint      R: restart level" : "Press Enter to try again");
         }
     } else if (global.game_state == GAME_STATE.CLEARED && global.result != undefined) {
         var _r = global.result;

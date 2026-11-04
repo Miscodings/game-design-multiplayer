@@ -39,6 +39,8 @@ function game_fail(_reason, _who = noone) {
     global.fail_time   = 0;
     global.fail_player = (_who != noone && instance_exists(_who)) ? _who.player_id : -1;
     shake_add(6);
+    // a checkpoint keeps your progress but not your time: the clock carries on from here
+    if (cp_active()) global.cp.time = global.level_time;
     // both heroes burst into embers
     for (var i = 0; i < 2; i++) {
         var _p = global.players[i];
@@ -87,6 +89,7 @@ function level_next() {
 function game_update() {
     global.intro_time++;
     if (global.coin_flash > 0) global.coin_flash--;
+    if (global.cp_flash > 0) global.cp_flash--;
     switch (global.game_state) {
         case GAME_STATE.PLAYING:
             global.level_time++;

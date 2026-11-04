@@ -2,7 +2,7 @@
   "$GMSprite":"v2",
   "%Name":"spr_plank_o",
   "bboxMode":0,
-  "bbox_bottom":15,
+  "bbox_bottom":5,
   "bbox_left":0,
   "bbox_right":31,
   "bbox_top":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"8416d33d-2654-41f3-8b36-5bc2a3600103","name":"8416d33d-2654-41f3-8b36-5bc2a3600103","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"483c038d-0c7e-40be-8dcd-fe2bf4f9d86f","name":"483c038d-0c7e-40be-8dcd-fe2bf4f9d86f","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":6,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"8a0bbb0f-04b5-4a9d-abfa-484664999b11","blendMode":0,"displayName":"default","isLocked":false,"name":"8a0bbb0f-04b5-4a9d-abfa-484664999b11","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"4f8477b7-0803-427e-b630-8accf0a1658b","blendMode":0,"displayName":"default","isLocked":false,"name":"4f8477b7-0803-427e-b630-8accf0a1658b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_plank_o",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8416d33d-2654-41f3-8b36-5bc2a3600103","path":"sprites/spr_plank_o/spr_plank_o.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"d7f669f6-cf74-469b-974b-ba657d988936","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"483c038d-0c7e-40be-8dcd-fe2bf4f9d86f","path":"sprites/spr_plank_o/spr_plank_o.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"7c3b89fe-1356-44da-96b2-4a6d27377997","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

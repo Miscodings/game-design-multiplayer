@@ -58,7 +58,7 @@ def level1():
     for b in (0, 1):
         L.tip(b, 6, 5, "move")
         L.tip(b, 20 if b == 0 else 16, 5, "jump")
-        L.tip(b, 13 if b == 0 else 10, 6, "coin")
+        L.tip(b, 14 if b == 0 else 27, 6, "coin")
         L.tip(b, 88, 4, "exit")
     L.tip(0, 52, 5, "shared")
     return L
@@ -244,8 +244,8 @@ def level6():
     L.ground(0, 44, 52, top=9)
     L.ground(1, 14, 20, top=9)
     L.ground(1, 40, 48, top=9)
-    L.line_coins(0, 8, 14, 9, 3)
-    L.line_coins(1, 8, 14, 9, 3)
+    L.line_coins(0, 8, 13, 9, 3)
+    L.line_coins(1, 8, 13, 9, 3)
     L.coins(0, [(45, 8), (47, 8), (49, 8), (88, 10), (90, 10), (92, 10)])
     L.coins(1, [(41, 8), (43, 8), (45, 8), (98, 10), (100, 10), (102, 10)])
     for b in (0, 1):
@@ -350,5 +350,12 @@ def level8():
     return L
 
 
+# checkpoint columns per level (a flag in both worlds, lit when both players pass it)
+CHECKPOINTS = {1: [63], 2: [33, 66], 3: [32, 65], 4: [52, 89], 5: [34, 72, 112], 6: [75, 106], 7: [52, 90, 112], 8: [50, 79, 112, 146]}
+
+
 def all_levels():
-    return [level1(), level2(), level3(), level4(), level5(), level6(), level7(), level8()]
+    out = [level1(), level2(), level3(), level4(), level5(), level6(), level7(), level8()]
+    for L in out:
+        L.checkpoints = sorted(CHECKPOINTS.get(L.idx, []))
+    return out

@@ -27,6 +27,7 @@ class Level:
         self.plats = {}       # digit -> dict(signal=, tx=, ty=, speed=)
         self.pools = {}       # char -> dict(signal=, partner=, radius=)
         self.lamp_radius = {}
+        self.checkpoints = []  # columns; a flag in each world (idx = position in the sorted list)
         self.coin_pts = []    # (band, col, row): coins are an overlay, so they can sit inside pits
 
     # --- drawing helpers
@@ -205,6 +206,9 @@ def build_room(L):
                     add("logic", "obj_plate", x, y + 12, 1, 1, [("signal_id", ch), ("latch", d.get("latch", 0)), ("activator", d.get("activator", 0))])
     for b, c, r in L.coin_pts:
         add("logic", "obj_coin", c * TILE + 8, (b * BAND + r) * TILE + 8)
+    for i, c in enumerate(L.checkpoints):
+        for b in range(2):
+            add("logic", "obj_checkpoint", c * TILE + 8, (b * BAND + 10) * TILE, 1, 1, [("idx", i)])
     for b, c0, c1, f in L.dark:
         add("logic", "obj_dark_zone", c0 * TILE, b * BAND * TILE, c1 - c0, BAND, [("feather", f)])
     for b, c, r, kind in L.tips:

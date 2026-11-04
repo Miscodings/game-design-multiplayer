@@ -32,7 +32,7 @@ def replace_in(path, old, new, count=1):
 
 # ------------------------------------------------------------------ scripts
 for name, folder in [("scr_art", "world"), ("scr_fx", "fx"), ("scr_player_art", "player"), ("scr_props", "world"),
-                     ("scr_tips", "world"), ("scr_levels", "core")]:
+                     ("scr_tips", "world"), ("scr_levels", "core"), ("scr_checkpoint", "core")]:
     write_script(name, folder, gml(name))
 write("scripts/scr_hud/scr_hud.gml", gml("scr_hud"))
 write("scripts/scr_game_state/scr_game_state.gml", gml("scr_game_state"))
@@ -88,6 +88,7 @@ if "gpu_set_blendmode(bm_normal);\n    draw_set_alpha(1);" not in s:
 patch_object("obj_game", {
     "create": """// Game controller. Exactly one per level room.
 game_init();
+cp_init();
 input_init();
 signals_init();
 theme_init();
@@ -102,6 +103,7 @@ players_spawn();
 echoes_spawn();
 boxes_link();
 coins_count();
+cp_restore();
 terrain_build();
 deco_build();
 cameras_follow();
@@ -113,7 +115,7 @@ instance_create_depth(0, 0, -300, obj_art, { kind: 2 });""",
 lights_clear();
 deco_lights();
 input_poll_all();
-if (keyboard_check_pressed(ord("R"))) room_restart();
+if (keyboard_check_pressed(ord("R"))) { cp_reset(); room_restart(); }
 if (keyboard_check_pressed(vk_escape)) game_end();
 
 // debug: jump straight to a level with the number keys
@@ -175,6 +177,11 @@ write_object("obj_coin", "level", None, {
     "step": "if (!game_is_playing()) exit;\ncoin_update();",
     "draw": "coin_draw();",
 })
+write_object("obj_checkpoint", "level", None, {
+    "create": "// idx (a property) orders the flags in a level. Both worlds have one with the same idx.\ndim = dim_of_y(y - 1);\nreached = false;",
+    "step": "checkpoint_update();",
+    "draw": "checkpoint_draw();",
+}, props=[("idx", "0")])
 write_object("obj_tip", "level", None, {
     "create": "// kind picks what the tip shows (see scr_tips). Drawn in GUI space by tips_draw_gui().\ndim = dim_of_y(y);",
 }, props=[("kind", "move")], visible=False)

@@ -4,21 +4,37 @@
 //
 // obj_tip has one property, kind. Kinds: move, jump, hold, stomp, plate, box, partner, coin, exit, tar, water, dark.
 
-#macro TIP_NEAR  110
-#macro TIP_FAR   200
+#macro TIP_NEAR  70
+#macro TIP_FAR   140
+
+/// @desc Tips teach each thing once: a tip that was shown in an earlier level stays hidden in later ones. The key is
+/// the tip's kind plus the world it is in; the value is the level it was first read in (so restarting that level,
+/// or coming back to it, still shows it).
+function tip_seen_elsewhere(_kind, _dim) {
+    if (!variable_global_exists("tips_seen")) global.tips_seen = {};
+    var _key = _kind + string(_dim);
+    return variable_struct_exists(global.tips_seen, _key) && global.tips_seen[$ _key] != level_index();
+}
 
 function tips_draw_gui() {
+    if (!variable_global_exists("tips_seen")) global.tips_seen = {};
     with (obj_tip) {
+        if (tip_seen_elsewhere(kind, dim)) continue;
         var _p = global.players[dim];
         if (!instance_exists(_p)) continue;
         var _d = point_distance(_p.x, _p.y - 12, x, y);
         var _alpha = clamp((TIP_FAR - _d) / (TIP_FAR - TIP_NEAR), 0, 1);
+        if (_alpha > 0.6) {
+            var _key = kind + string(dim);
+            if (!variable_struct_exists(global.tips_seen, _key)) global.tips_seen[$ _key] = level_index();
+        }
         if (global.game_state != GAME_STATE.PLAYING) _alpha *= 0.4;
         if (_alpha <= 0.01) continue;
 
         var _cam = global.cams[dim];
-        var _sx = (x - camera_get_view_x(_cam)) * (PORT_W / VIEW_W);
-        var _sy = dim * PORT_H + (y - camera_get_view_y(_cam)) * (PORT_H / VIEW_H) + sin(global.frame * 0.05) * 3;
+        // whole pixels, so the text and keycaps stay crisp
+        var _sx = floor((x - camera_get_view_x(_cam)) * (PORT_W / VIEW_W));
+        var _sy = floor(dim * PORT_H + (y - camera_get_view_y(_cam)) * (PORT_H / VIEW_H) + sin(global.frame * 0.05) * 3);
         if (_sx < -200 || _sx > PORT_W + 200) continue;
         draw_set_alpha(_alpha);
         tip_draw(kind, _sx, _sy, dim);

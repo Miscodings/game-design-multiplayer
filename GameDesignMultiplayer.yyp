@@ -184,6 +184,8 @@
     {"id":{"name":"obj_title","path":"objects/obj_title/obj_title.yy",},},
     {"id":{"name":"scr_title","path":"scripts/scr_title/scr_title.yy",},},
     {"id":{"name":"rm_title","path":"rooms/rm_title/rm_title.yy",},},
+    {"id":{"name":"scr_checkpoint","path":"scripts/scr_checkpoint/scr_checkpoint.yy",},},
+    {"id":{"name":"obj_checkpoint","path":"objects/obj_checkpoint/obj_checkpoint.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

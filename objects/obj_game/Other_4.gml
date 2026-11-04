@@ -3,6 +3,7 @@ players_spawn();
 echoes_spawn();
 boxes_link();
 coins_count();
+cp_restore();
 terrain_build();
 deco_build();
 cameras_follow();

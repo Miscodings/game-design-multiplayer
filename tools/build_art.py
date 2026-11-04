@@ -80,7 +80,7 @@ def terrain():
 
     # wooden moving platform strips (Other Tiles1 row 6: 5 plank pieces, 32 px wide, ~12 px tall)
     other = load(os.path.join(PLAT, "Other Tiles1.png"))
-    planks = [crop_alpha(other.crop((i * 32, 6 * 32, i * 32 + 32, 6 * 32 + 16))) for i in range(5)]
+    planks = [other.crop((i * 32, 6 * 32, i * 32 + 32, 6 * 32 + 6)) for i in range(5)]   # one board, 6 px tall
     return planks
 
 
@@ -118,7 +118,10 @@ def frames_from(sheet):
     out = []
     for r, n in rows:
         for c in range(n):
-            out.append(sheet.crop((c * 80, r * 64, c * 80 + 80, r * 64 + 64)))
+            f = sheet.crop((c * 80, r * 64, c * 80 + 80, r * 64 + 64))
+            if r == 2:   # the run row of the pack faces left; every other row faces right
+                f = f.transpose(Image.FLIP_LEFT_RIGHT)
+            out.append(f)
     return out
 
 
@@ -183,9 +186,9 @@ def props(planks):
     write_sprite("spr_crate_u", [box_u], 16, 32)
 
     # platform planks (one 32px piece; the game tiles it)
-    p = planks[1]
-    write_sprite("spr_plank_o", [p.resize((32, 16), Image.NEAREST) if p.size != (32, 16) else p], 0, 0)
-    write_sprite("spr_plank_u", [gradient_map(p.resize((32, 16), Image.NEAREST), HELL_GROUND)], 0, 0)
+    p = planks[2]
+    write_sprite("spr_plank_o", [p], 0, 0)
+    write_sprite("spr_plank_u", [gradient_map(p, HELL_GROUND)], 0, 0)
 
     # torches (lit frames: row 1 = 6 frames of 32 x 32)
     tor = load(os.path.join(PLAT, "Torch.png"))

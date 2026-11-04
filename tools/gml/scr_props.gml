@@ -9,6 +9,7 @@ function coin_update() {
     if (!instance_exists(_p)) return;
     if (point_distance(_p.x, _p.y - 11, x, y) < 13) {
         global.coins_got[dim]++;
+        array_push(global.coins_taken, [x, y]);
         global.coin_flash = 12;
         fx_burst(x, y, 12, global.theme[dim].accent, 1.8, 26, 1.6, 0.03, true);
         fx_emit(x, y, 0, -0.6, 22, 3, c_white, 0, true);
@@ -124,13 +125,18 @@ function platform_draw() {
     var _l = bbox_left;
     var _r = bbox_right + 1;
     if (!sprite_exists(_spr)) { draw_self(); return; }
+    // three boards stacked (each 3 units tall), darker towards the underside, tiled one board per tile
+    var _tints = [c_white, make_colour_rgb(205, 190, 190), make_colour_rgb(150, 136, 142)];
     for (var xx = _l; xx < _r; xx += 16) {
-        draw_sprite_ext(_spr, 0, xx, y, ART_S, ART_S, 0, c_white, 1);
-        draw_sprite_ext(_spr, 0, xx, y + 8, ART_S, ART_S, 0, make_colour_rgb(190, 170, 170), 1);
+        for (var i = 0; i < 3; i++) {
+            draw_sprite_ext(_spr, 0, xx, y + i * 3, ART_S, ART_S, 0, _tints[i], 1);
+        }
     }
-    // a lit edge so a moving platform reads as "alive"
+    // a lit edge on top so a moving platform reads as "alive"
     draw_set_colour(global.theme[dim].accent);
-    draw_rectangle(_l, y, _r - 1, y, false);
+    draw_set_alpha(0.55);
+    draw_rectangle(_l + 1, y, _r - 2, y, false);
+    draw_set_alpha(1);
     draw_set_colour(c_white);
 }
 

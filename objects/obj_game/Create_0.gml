@@ -1,5 +1,6 @@
 // Game controller. Exactly one per level room.
 game_init();
+cp_init();
 input_init();
 signals_init();
 theme_init();

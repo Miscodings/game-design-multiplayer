@@ -62,3 +62,5 @@ Temporary Items
 Build
 tools/preview/
 *.yyz
+output/
+__pycache__/
