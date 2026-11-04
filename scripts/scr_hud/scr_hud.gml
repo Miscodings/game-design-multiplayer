@@ -1,24 +1,7 @@
 // scr_hud: the divider between the two worlds, timer, coin counters, level banner and the fail / clear panels.
 // Drawn from obj_game's Draw GUI event on the 1280 x 720 GUI.
 
-// Fonts are bitmap assets baked at twice their layout size (fnt_ui 24 pt, fnt_title 48 pt), so drawing
-// at half scale stays sharp on the 1280 x 720 GUI. Alignment is set by the caller.
-function ui_text(_x, _y, _str, _big = false) {
-    draw_set_font(_big ? fnt_title : fnt_ui);
-    // the glyphs are baked at 2x, so filter them down (nearest sampling makes them ragged) and keep them on whole pixels
-    gpu_set_texfilter(true);
-    draw_text_transformed(floor(_x), floor(_y), _str, 0.5, 0.5, 0);
-    gpu_set_texfilter(false);
-}
-
-/// @desc Text with a dark drop shadow, in the current colour.
-function ui_text_shadow(_x, _y, _str, _big = false) {
-    var _c = draw_get_colour();
-    draw_set_colour(make_colour_rgb(8, 6, 14));
-    ui_text(_x + 1, _y + 2, _str, _big);
-    draw_set_colour(_c);
-    ui_text(_x, _y, _str, _big);
-}
+// (ui_text, ui_text_shadow and ui_text_w live in scr_font.)
 
 function time_format(_frames) {
     var _secs = _frames / game_get_speed(gamespeed_fps);
@@ -116,7 +99,7 @@ function hud_draw() {
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_set_colour(make_colour_rgb(255, 236, 190));
-        ui_text_shadow(_gw / 2, 58, string(level_index()) + "  -  " + _m.name, true);
+        ui_text_shadow(_gw / 2, 58, "Level " + string(level_index()) + ": " + _m.name, true);
         draw_set_colour(make_colour_rgb(220, 210, 230));
         ui_text_shadow(_gw / 2, 92, _m.hint);
         draw_set_alpha(1);
@@ -129,7 +112,7 @@ function hud_draw() {
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_set_colour(make_colour_rgb(255, 236, 190));
-        ui_text_shadow(_gw / 2, 58, "CHECKPOINT");
+        ui_text_shadow(_gw / 2, 58, "Checkpoint saved");
         draw_set_alpha(1);
     }
 
@@ -151,7 +134,7 @@ function hud_draw() {
             draw_set_colour(make_colour_rgb(230, 220, 235));
             ui_text(_gw / 2, _mid + 2, fail_text(global.fail_reason));
             draw_set_colour(c_white);
-            ui_text(_gw / 2, _mid + 40, cp_active() ? "Enter: retry from checkpoint      R: restart level" : "Press Enter to try again");
+            ui_text(_gw / 2, _mid + 40, cp_active() ? "Enter: Retry from checkpoint     R: Restart level" : "Press Enter to try again");
         }
     } else if (global.game_state == GAME_STATE.CLEARED && global.result != undefined) {
         var _r = global.result;
@@ -169,18 +152,17 @@ function hud_draw() {
             draw_set_halign(fa_right);
             ui_text(_xb, _yy, _value);
         };
-        _row(_x1, _x2, _mid - 62, "Time", secs_format(_r.secs) + "   (par " + secs_format(_r.par) + ")");
+        _row(_x1, _x2, _mid - 62, "Time", secs_format(_r.secs) + "   (Par " + secs_format(_r.par) + ")");
         _row(_x1, _x2, _mid - 32, "Coins", string(_r.coins) + " / " + string(_r.coins_total) + "   +" + string(_r.coins * COIN_SCORE));
         _row(_x1, _x2, _mid - 2, "Time bonus", "+" + string(_r.bonus));
         draw_set_colour(make_colour_rgb(255, 230, 150));
-        _row(_x1, _x2, _mid + 34, "SCORE", string(_r.score) + (_r.new_best ? "   NEW BEST" : "   best " + string(_r.best_score)));
+        _row(_x1, _x2, _mid + 34, "Score", string(_r.score) + (_r.new_best ? "   New best!" : "   Best " + string(_r.best_score)));
         draw_set_colour(make_colour_rgb(220, 210, 230));
         draw_set_halign(fa_center);
-        ui_text(_gw / 2, _mid + 112, "Enter: next level        R: restart");
+        ui_text(_gw / 2, _mid + 112, "Enter: Next level     R: Restart level");
     }
 
-    draw_set_font(-1);
-    draw_set_halign(fa_left);
+        draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_colour(c_white);
     draw_set_alpha(1);

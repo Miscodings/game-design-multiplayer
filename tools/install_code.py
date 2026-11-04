@@ -32,7 +32,7 @@ def replace_in(path, old, new, count=1):
 
 # ------------------------------------------------------------------ scripts
 for name, folder in [("scr_art", "world"), ("scr_fx", "fx"), ("scr_player_art", "player"), ("scr_props", "world"),
-                     ("scr_tips", "world"), ("scr_levels", "core"), ("scr_checkpoint", "core")]:
+                     ("scr_tips", "world"), ("scr_levels", "core"), ("scr_checkpoint", "core"), ("scr_font", "core")]:
     write_script(name, folder, gml(name))
 write("scripts/scr_hud/scr_hud.gml", gml("scr_hud"))
 write("scripts/scr_game_state/scr_game_state.gml", gml("scr_game_state"))

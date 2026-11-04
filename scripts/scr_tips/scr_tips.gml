@@ -43,7 +43,6 @@ function tips_draw_gui() {
     draw_set_colour(c_white);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
-    draw_set_font(-1);
 }
 
 // ------------------------------------------------------------------ pieces
@@ -107,10 +106,9 @@ function tip_keys(_dim) {
 
 // ------------------------------------------------------------------ the tips
 
-/// @desc Width in GUI pixels of a line of tip text (the font is drawn at half scale, see ui_text).
+/// @desc Width in GUI pixels of a line of tip text .
 function tip_width(_str) {
-    draw_set_font(fnt_ui);
-    return ceil(string_width(_str) * 0.5);
+    return ui_text_w(_str);
 }
 
 /// @desc A plate sized to fit its lines of text, with the lines drawn on it. _min_w / _extra_h leave room for keycaps above.
@@ -133,7 +131,7 @@ function tip_draw(_kind, _x, _y, _dim) {
 
     switch (_kind) {
         case "move":
-            tip_lines(_x, _y + 0, ["move  and  jump"], _dim, 240, 44);
+            tip_lines(_x, _y + 0, ["Move and jump"], _dim, 240, 44);
             var _p = _t mod 2.6;
             tip_key(_x - 80, _y - 26, _k[0], 36, _p > 1.5 && _p < 2.0, _dim);
             tip_key(_x - 38, _y - 26, _k[1], 36, _p > 0.1 && _p < 1.1, _dim);
@@ -141,20 +139,20 @@ function tip_draw(_kind, _x, _y, _dim) {
             break;
 
         case "jump":
-            tip_lines(_x, _y, ["hold  for  a  higher  jump"], _dim, 170, 44);
+            tip_lines(_x, _y, ["Hold jump to go higher"], _dim, 170, 44);
             var _q = _t mod 2.0;
             tip_key(_x, _y - 26, _k[2], _jw, _q < 0.5, _dim);
             break;
 
-        case "stomp":   tip_lines(_x, _y, ["jump  on  its  head"], _dim); break;
-        case "plate":   tip_lines(_x, _y, ["stand  on  the  plate"], _dim); break;
-        case "box":     tip_lines(_x, _y, ["both  players  push  the  box", "from  the  same  side"], _dim); break;
-        case "partner": tip_lines(_x, _y, ["your  partner  lights", "your  way  in  the  dark"], _dim); break;
-        case "gate":    tip_lines(_x, _y, ["a  plate  in  the  other  world", "opens  this  gate"], _dim); break;
-        case "coin":    tip_lines(_x, _y, ["coins  count  for  score"], _dim); break;
-        case "exit":    tip_lines(_x, _y, ["both  players  reach", "their  portal"], _dim); break;
-        case "tar":     tip_lines(_x, _y, ["tar  is  deadly"], _dim); break;
-        case "water":   tip_lines(_x, _y, ["your  partner  standing  here", "makes  the  way  safe"], _dim); break;
-        case "shared":  tip_lines(_x, _y, ["if  one  falls", "you  both  fall"], _dim); break;
+        case "stomp":   tip_lines(_x, _y, ["Stomp enemies from above"], _dim); break;
+        case "plate":   tip_lines(_x, _y, ["Stand on the plate"], _dim); break;
+        case "box":     tip_lines(_x, _y, ["Both players push the box", "from the same side"], _dim); break;
+        case "partner": tip_lines(_x, _y, ["Your partner lights", "the way in the dark"], _dim); break;
+        case "gate":    tip_lines(_x, _y, ["A plate in the other world", "opens this gate"], _dim); break;
+        case "coin":    tip_lines(_x, _y, ["Coins add to your score"], _dim); break;
+        case "exit":    tip_lines(_x, _y, ["Both players reach", "their portal"], _dim); break;
+        case "tar":     tip_lines(_x, _y, ["Tar is deadly"], _dim); break;
+        case "water":   tip_lines(_x, _y, ["Your partner standing here", "makes the way safe"], _dim); break;
+        case "shared":  tip_lines(_x, _y, ["If one falls,", "you both fall"], _dim); break;
     }
 }

@@ -47,15 +47,14 @@ function title_draw() {
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     var _bob = sin(t * 0.04) * 4;
-    draw_set_font(fnt_title);
     draw_set_colour(make_colour_rgb(8, 6, 14));
-    draw_text_transformed(_gw / 2 + 3, _half - 120 + _bob + 4, "ABOVE", 1.6, 1.6, 0);
+    ui_text(_gw / 2 + 4, _half - 120 + _bob + 5, "ABOVE", true, 3);
     draw_set_colour(global.theme[0].accent);
-    draw_text_transformed(_gw / 2, _half - 120 + _bob, "ABOVE", 1.6, 1.6, 0);
+    ui_text(_gw / 2, _half - 120 + _bob, "ABOVE", true, 3);
     draw_set_colour(make_colour_rgb(8, 6, 14));
-    draw_text_transformed(_gw / 2 + 3, _half + 120 - _bob + 4, "BELOW", 1.6, 1.6, 0);
+    ui_text(_gw / 2 + 4, _half + 120 - _bob + 5, "BELOW", true, 3);
     draw_set_colour(global.theme[1].accent);
-    draw_text_transformed(_gw / 2, _half + 120 - _bob, "BELOW", 1.6, 1.6, 0);
+    ui_text(_gw / 2, _half + 120 - _bob, "BELOW", true, 3);
 
     // controls and prompt
     draw_set_colour(c_white);
@@ -64,11 +63,10 @@ function title_draw() {
     draw_set_alpha(1);
     draw_set_colour(global.theme[0].accent);
     draw_set_halign(fa_left);
-    ui_text(24, 24, "P1  A  D  move     W / Space  jump");
+    ui_text(24, 24, "P1:  A / D to move,  W or Space to jump");
     draw_set_colour(global.theme[1].accent);
     draw_set_halign(fa_right);
-    ui_text(_gw - 24, _gh - 24, "P2  Left  Right  move     Up  jump");
-    draw_set_font(-1);
+    ui_text(_gw - 24, _gh - 24, "P2:  Left / Right to move,  Up to jump");
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_colour(c_white);
