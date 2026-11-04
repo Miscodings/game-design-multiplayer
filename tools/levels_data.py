@@ -58,7 +58,7 @@ def level1():
     for b in (0, 1):
         L.tip(b, 6, 5, "move")
         L.tip(b, 20 if b == 0 else 16, 5, "jump")
-        L.tip(b, 14 if b == 0 else 27, 6, "coin")
+        L.tip(b, 28 if b == 0 else 27, 6, "coin")
         L.tip(b, 88, 4, "exit")
     L.tip(0, 52, 5, "shared")
     return L
@@ -345,7 +345,7 @@ def level8():
     for b in (0, 1):
         L.tip(b, 6, 5, "move")
         L.tip(b, 150, 4, "exit")
-    L.tip(0, 12, 4, "tar")
+    L.tip(0, 13, 4, "tar")
     L.tip(1, 14, 4, "tar")
     return L
 
