@@ -181,7 +181,7 @@ write_object("obj_checkpoint", "level", None, {
     "create": "// idx (a property) orders the flags in a level. Both worlds have one with the same idx.\ndim = dim_of_y(y - 1);\nreached = false;",
     "step": "checkpoint_update();",
     "draw": "checkpoint_draw();",
-}, props=[("idx", "0")])
+}, props=[("idx", 0)])
 write_object("obj_tip", "level", None, {
     "create": "// kind picks what the tip shows (see scr_tips). Drawn in GUI space by tips_draw_gui().\ndim = dim_of_y(y);",
 }, props=[("kind", "move")], visible=False)
