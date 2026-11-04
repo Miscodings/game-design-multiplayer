@@ -167,9 +167,17 @@ function exit_update() {
 function exit_draw() {
     var _spr = global.art[dim].portal;
     var _cx = (bbox_left + bbox_right + 1) / 2;
-    var _c = global.theme[dim].accent;
+    // the underworld portal is violet so it stands out from the red sky; a dark disc behind it separates it further
+    var _c = (dim == 0) ? global.theme[dim].accent : make_colour_rgb(190, 110, 255);
+    if (dim == 1) {
+        draw_set_colour(make_colour_rgb(8, 2, 16));
+        draw_set_alpha(0.7);
+        draw_ellipse(_cx - 18, bbox_bottom - 44, _cx + 18, bbox_bottom + 1, false);
+        draw_set_alpha(1);
+        draw_set_colour(c_white);
+    }
     gpu_set_blendmode(bm_add);
-    draw_sprite_ext(spr_light, 0, _cx, bbox_bottom - 14, 0.9, 0.9, 0, _c, 0.28 + 0.05 * sin(global.frame * 0.1));
+    draw_sprite_ext(spr_light, 0, _cx, bbox_bottom - 14, 0.9, 0.9, 0, _c, 0.28 + 0.05 * sin(global.frame * 0.1) + 0.12 * dim);
     gpu_set_blendmode(bm_normal);
     if (sprite_exists(_spr)) draw_sprite_ext(_spr, floor(global.frame * 0.2) mod 10, _cx, bbox_bottom + 1, ART_S, ART_S, 0, c_white, 1);
 }

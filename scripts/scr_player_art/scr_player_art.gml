@@ -13,6 +13,8 @@ function player_art_init() {
     was_grounded = false;
     prev_yspd    = 0;
     idle_t       = 0;
+    last_x       = x;
+    move_hold    = 0;     // frames since the hero last really moved (xspd alone flickers against a wall)
     run_t        = 0;
     air_t        = 0;
     step_dust    = 0;
@@ -43,9 +45,14 @@ function player_art_update() {
     squash = lerp(squash, 0, 0.22);
     if (abs(squash) < 0.01) squash = 0;
 
+    // really moving: walking into a wall keeps xspd non-zero for a frame and then zeroes it, so judge by the displacement
+    if (abs(x - last_x) > 0.05) move_hold = 6;
+    else move_hold = max(0, move_hold - 1);
+    last_x = x;
+
     if (grounded) {
         air_t = 0;
-        if (abs(xspd) > 0.2) {
+        if (move_hold > 0) {
             run_t += abs(xspd) * 0.11;
             // a puff on every footfall, and when skidding to turn around
             step_dust--;
@@ -75,7 +82,7 @@ function player_art_draw() {
         else if (yspd < 0.6) _idx = HERO_JUMP + 3;
         else                 _idx = HERO_FALL + min(3, floor((air_t - 12) / 5));
         if (_idx < HERO_JUMP) _idx = HERO_JUMP;
-    } else if (abs(xspd) > 0.2) {
+    } else if (move_hold > 0) {
         _idx = HERO_RUN + (floor(run_t) mod 8);
     } else {
         _idx = HERO_IDLE + (floor(idle_t) mod 5);
