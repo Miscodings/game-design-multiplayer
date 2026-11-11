@@ -25,14 +25,14 @@ function level_meta(_i = level_index()) {
         return { name: obj_game.level_name, par: obj_game.level_par, hint: obj_game.level_hint };
     }
     switch (_i) {
-        case 1: return { name: "First Steps",     par: 45,  hint: "Walk to your portals. Your partner's glow shows where they are." };
-        case 2: return { name: "Hold the Line",   par: 60,  hint: "A plate in one world opens a gate in the other." };
+        case 1: return { name: "First Steps", par: 45, hint: "Walk to your portals. Your partner's glow shows where they are." };
+        case 2: return { name: "Hold the Line", par: 80, hint: "A plate in one world works something in the other. Hold it for your partner." };
         case 3: return { name: "Sticky Situation", par: 70, hint: "Tar kills. Slimes can be stomped." };
-        case 4: return { name: "Heavy Lifting",   par: 75,  hint: "One box in each world. Push them together." };
-        case 5: return { name: "Into the Dark",   par: 80,  hint: "Your partner is your lantern." };
-        case 6: return { name: "Tide Turner",     par: 85,  hint: "Where one of you stands, the other is safe." };
-        case 7: return { name: "Crossed Paths",   par: 100, hint: "Plates, platforms and a long way down." };
-        case 8: return { name: "The Gauntlet",    par: 130, hint: "Everything you have learned." };
+        case 4: return { name: "Heavy Lifting", par: 75, hint: "One box in each world. Push them together." };
+        case 5: return { name: "Into the Dark", par: 80, hint: "Your partner is your lantern." };
+        case 6: return { name: "Tide Turner", par: 85, hint: "Where one of you stands, the other is safe." };
+        case 7: return { name: "Beat the Clock", par: 70, hint: "A pulse plate opens the way for a few seconds. Ride the lift together." };
+        case 8: return { name: "Ring Road", par: 140, hint: "Take opposite arcs. Open each other's gates." };
     }
     return { name: "Level " + string(_i), par: 90, hint: "" };
 }
@@ -86,8 +86,7 @@ function debug_level_hint() {
     var _va = draw_get_valign();
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
-    var _i = level_index();
-    var _txt = "DEBUG  keys 1-9 = level 1-9, F3 = hitboxes   (now " + ((_i > 0) ? string(_i) : "title") + " of " + string(level_count()) + ")";
+    var _txt = "DEBUG  keys 1-9 = level 1-9, F3 = hitboxes";
     draw_set_alpha(0.75);
     draw_set_colour(make_colour_rgb(200, 220, 255));
     ui_text_shadow(8, display_get_gui_height() - 14, _txt);
