@@ -2,6 +2,8 @@
 
 // Draws debug helpers (hazard zones, etc.)
 #macro DEBUG        false
+// Dev aid: number keys jump between levels (1-9 = levels 1-9, 0 = level 10, hold Shift to add 10). Set false before shipping.
+#macro LEVEL_JUMP_KEYS true
 
 // Grid size in pixels
 #macro TILE         16
@@ -16,10 +18,16 @@
 #macro WIN_W        1280
 #macro WIN_H        720
 
-// Height of one dimension band in the room (the room is 2 * DIM_H tall), 12 tiles.
-// The view is 12 pixels shorter than the band, so each camera shows the bottom of its band and the
-// top 12 pixels (empty sky) are cropped. Keep levels free of anything important in that strip.
-#macro DIM_H        192
+// Height of one dimension band. The room is 2 * DIM_H tall, so every level picks its own band height.
+// 192 (12 tiles) is the original size: the camera stays locked to the bottom of the band (the top 12 px are cropped).
+// Anything taller scrolls vertically (see camera_y_for in scr_view).
+#macro DIM_H        (room_height div 2)
+
+// Vertical camera (levels taller than the view): where on the view the player's feet sit (0 = top, 1 = bottom),
+// how far the player can move before the view follows (pixels), and the fastest the view moves (pixels per frame).
+#macro CAM_FOCUS     0.6
+#macro CAM_DEADZONE  20
+#macro CAM_MAX_STEP  7
 
 // Frames after a fail before the "press Enter" prompt appears (and Enter starts working)
 #macro FAIL_DELAY   50
@@ -40,7 +48,7 @@ enum FAIL { NONE, HAZARD, ENEMY, FALL, CRUSH }
 #macro ECHO_MOTES   150
 
 // Frames a pool's safe window lingers after the partner leaves the ground
-#macro POOL_GRACE   10
+#macro POOL_GRACE   36   // frames the partner window survives after the partner leaves the ground (36 covers a 3-tile gap jump)
 
 // Pixels per frame a linked box pair moves. A player pushing a box is held to this speed.
 #macro PUSH_SPEED   1

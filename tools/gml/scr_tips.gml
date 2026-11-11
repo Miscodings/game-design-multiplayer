@@ -2,7 +2,7 @@
 // plate that fade in as the player of that dimension walks up to them. Drawn in GUI space (crisp text) at the
 // on-screen position of an obj_tip. Each tip shows ITS OWN player's keys: WASD / Space above, arrow keys below.
 //
-// obj_tip has one property, kind. Kinds: move, jump, hold, stomp, plate, box, partner, coin, exit, tar, water, dark.
+// obj_tip has one property, kind. Kinds: move, jump, hold, stomp, plate, box, partner, coin, exit, tar, water, dark, platform, pulse, together.
 
 #macro TIP_NEAR  70
 #macro TIP_FAR   140
@@ -154,5 +154,8 @@ function tip_draw(_kind, _x, _y, _dim) {
         case "tar":     tip_lines(_x, _y, ["Tar is deadly"], _dim); break;
         case "water":   tip_lines(_x, _y, ["Your partner standing here", "makes the way safe"], _dim); break;
         case "shared":  tip_lines(_x, _y, ["If one falls,", "you both fall"], _dim); break;
+        case "platform": tip_lines(_x, _y, ["A plate in the other world", "moves this platform"], _dim); break;
+        case "pulse":    tip_lines(_x, _y, ["A pulse plate opens the way", "for a few seconds. Run!"], _dim); break;
+        case "together": tip_lines(_x, _y, ["The lift only moves", "while you both ride it"], _dim); break;
     }
 }

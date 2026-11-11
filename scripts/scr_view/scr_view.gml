@@ -23,6 +23,7 @@ function window_setup() {
 
 function cameras_init() {
     global.cams  = [noone, noone];
+    global.cam_y = [undefined, undefined];
     view_enabled = true;
     for (var i = 0; i < 2; i++) {
         var _cam = view_camera[i];
@@ -40,23 +41,44 @@ function cameras_init() {
     }
 }
 
-/// @desc Each camera follows its own player in x only (y stays locked to its band).
-/// No smoothing on purpose: players move in whole pixels, so locking the camera to the
-/// player's position keeps the player perfectly steady on screen. Any lerp here makes
-/// the player jitter against the world.
+/// @desc Camera y for one world. A band no taller than the view (the original 12-tile levels) stays locked to the
+/// bottom of the band. A taller band scrolls: the view ignores small moves (a dead zone, so ordinary jumps do not bob
+/// the picture) and follows once the player leaves it, a few pixels per frame, always in whole pixels.
+function camera_y_for(_i, _p) {
+    var _lo = dim_top(_i);
+    var _hi = _lo + DIM_H - VIEW_H;
+    if (_hi - _lo <= TILE) return _hi;
+
+    var _focus = floor(_p.y) - round(VIEW_H * CAM_FOCUS);
+    var _cur = global.cam_y[_i];
+    if (is_undefined(_cur)) {
+        _cur = _focus;      // first frame in a room: start on the player
+    } else {
+        var _d = _focus - _cur;
+        if (abs(_d) > CAM_DEADZONE) _cur += sign(_d) * clamp(ceil((abs(_d) - CAM_DEADZONE) * 0.18), 1, CAM_MAX_STEP);
+    }
+    _cur = clamp(_cur, _lo, _hi);
+    global.cam_y[_i] = _cur;
+    return _cur;
+}
+
+/// @desc Each camera follows its own player: x is locked to the player (players move in whole pixels, so any
+/// smoothing would make them jitter against the world), y goes through camera_y_for().
 function cameras_follow() {
     for (var i = 0; i < 2; i++) {
         var _p = global.players[i];
         if (!instance_exists(_p)) continue;
         var _tx = clamp(floor(_p.x) - VIEW_W / 2, 0, max(0, room_width - VIEW_W));
-        // screen shake: sideways either way, upward only (the band's top 12 pixels are spare, below it is the next world)
+        var _ty = camera_y_for(i, _p);
+        // screen shake: a few pixels either way, never outside the band
         var _sx = 0;
         var _sy = 0;
         if (variable_global_exists("shake") && global.shake > 0) {
             _sx = round(random_range(-1, 1) * global.shake);
-            _sy = -round(random(1) * global.shake);
+            _sy = round(random_range(-1, 1) * global.shake);
         }
-        camera_set_view_pos(global.cams[i], _tx + _sx, dim_view_top(i) + max(_sy, -12));
+        var _lo = dim_top(i);
+        camera_set_view_pos(global.cams[i], _tx + _sx, clamp(_ty + _sy, _lo, _lo + DIM_H - VIEW_H));
     }
 }
 

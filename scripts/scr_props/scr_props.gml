@@ -68,15 +68,34 @@ function tar_draw() {
     draw_set_colour(c_white);
 }
 
+// ------------------------------------------------------------------ channel colours
+
+/// @desc Plates, gates and platforms whose channel is named after a colour are drawn in that colour, so several
+/// channels can be in view at once. Any other channel name keeps the dimension's accent colour (returns -1).
+function channel_colour(_id) {
+    switch (_id) {
+        case "red":    return make_colour_rgb(236, 84, 72);
+        case "blue":   return make_colour_rgb(84, 156, 244);
+        case "green":  return make_colour_rgb(96, 210, 112);
+        case "yellow": return make_colour_rgb(244, 208, 72);
+        case "violet": return make_colour_rgb(190, 112, 244);
+        case "white":  return make_colour_rgb(236, 236, 248);
+    }
+    return -1;
+}
+
 // ------------------------------------------------------------------ level furniture
 
 function gate_draw() {
-    var _c = global.theme[dim].accent;
+    var _c = channel_colour(signal_id);
+    if (_c == -1) _c = global.theme[dim].accent;
     var _w = 16 * image_xscale;
     var _h = 16 * image_yscale;
     var _l = home_x;
     var _t = home_y;
+    var _left = signal_left(signal_id);
     var _a = is_open ? 0.18 : 1;
+    if (is_open && _left > 0 && _left < 90 && ((global.frame div 4) mod 2 == 0)) _a = 0.6;
     draw_set_alpha(_a);
     // iron frame and bars
     draw_set_colour(make_colour_rgb(30, 26, 38));
@@ -98,8 +117,9 @@ function gate_draw() {
 }
 
 function plate_draw() {
-    var _on = pressed || latched;
-    var _c = global.theme[dim].accent;
+    var _on = pressed || latched || pulse_timer > 0;
+    var _c = channel_colour(signal_id);
+    if (_c == -1) _c = global.theme[dim].accent;
     var _dy = pressed ? 2 : 0;
     var _l = bbox_left;
     var _r = bbox_right + 1;
@@ -122,22 +142,26 @@ function plate_draw() {
 
 function platform_draw() {
     var _spr = global.art[dim].plank;
+    // width comes from the instance scale, not from bbox_right: on a scaled instance GameMaker can report bbox_right one
+    // pixel too far, which made the board loop below draw an extra 16 px block that had no collision
+    var _n = max(1, round(image_xscale));
     var _l = bbox_left;
-    var _r = bbox_right + 1;
+    var _r = _l + _n * 16;
     var _t = bbox_top;
     if (!sprite_exists(_spr)) { draw_self(); return; }
     // the slab fills the whole collision box (16 tall): five boards, one per 3 units, darker towards the underside,
     // so what you see is exactly what you can stand on
     var _tints = [c_white, make_colour_rgb(222, 208, 208), make_colour_rgb(184, 170, 172), make_colour_rgb(150, 138, 142), make_colour_rgb(118, 108, 114)];
-    for (var xx = _l; xx < _r; xx += 16) {
+    for (var k = 0; k < _n; k++) {
         for (var i = 0; i < 5; i++) {
-            draw_sprite_ext(_spr, 0, xx, _t + i * 3, ART_S, ART_S, 0, _tints[i], 1);
+            draw_sprite_ext(_spr, 0, _l + k * 16, _t + i * 3, ART_S, ART_S, 0, _tints[i], 1);
         }
     }
     draw_set_colour(make_colour_rgb(18, 12, 20));
     draw_rectangle(_l, _t + 15, _r - 1, _t + 15, false);
     // a lit edge on top so a moving platform reads as "alive"
-    draw_set_colour(global.theme[dim].accent);
+    var _pc = channel_colour(signal_id);
+    draw_set_colour(_pc == -1 ? global.theme[dim].accent : _pc);
     draw_set_alpha(0.55);
     draw_rectangle(_l + 1, _t, _r - 2, _t, false);
     draw_set_alpha(1);
