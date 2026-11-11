@@ -44,17 +44,21 @@ function move_collide() {
     }
 }
 
-/// @desc Move the calling solid (platform, box) one pixel along one axis, carrying the players standing
-/// on top of it and pushing any it moves into. A player with nowhere to go is crushed (shared fail).
+/// @desc Move the calling solid (platform, box) one pixel along one axis, carrying the players and crates standing
+/// on top of it and pushing any it moves into. A player or crate with nowhere to go is crushed (shared fail).
 function solid_move_pixel(_sx, _sy) {
     var _self = id;
 
-    // who is standing on top before this solid moves
+    // who is standing on top before this solid moves: players, and crates (which carry what is on them in turn)
     var _riding = [false, false];
     for (var i = 0; i < 2; i++) {
         var _p = global.players[i];
         if (!instance_exists(_p)) continue;
         with (_p) _riding[i] = !place_meeting(x, y, _self) && place_meeting(x, y + 1, _self);
+    }
+    var _crates = [];
+    with (obj_box) {
+        if (id != _self && !place_meeting(x, y, _self) && place_meeting(x, y + 1, _self)) array_push(_crates, id);
     }
 
     x += _sx;
@@ -71,6 +75,17 @@ function solid_move_pixel(_sx, _sy) {
                 } else if (place_meeting(x, y, _self)) {
                     game_fail(FAIL.CRUSH, id);
                 }
+            }
+        }
+    }
+
+    // crates: carried when they rode this solid, shoved when it moved into them, crushed if they cannot move
+    with (obj_box) {
+        if (id != _self && (array_contains(_crates, id) || place_meeting(x, y, _self))) {
+            if (!solid_at(x + _sx, y + _sy)) {
+                solid_move_pixel(_sx, _sy);
+            } else if (place_meeting(x, y, _self)) {
+                game_fail(FAIL.CRUSH, global.players[dim]);
             }
         }
     }

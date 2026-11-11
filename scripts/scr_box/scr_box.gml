@@ -58,6 +58,15 @@ function box_pair_update() {
 }
 
 function box_update() {
+    // safety net: a crate wedged inside a solid (a gate closing on it, a bad placement) is lifted out if it can be
+    if (solid_at(x, y)) {
+        var _y0 = y;
+        var _n = 0;
+        while (solid_at(x, y) && _n < 16) { y -= 1; _n++; }
+        if (solid_at(x, y)) y = _y0;
+        yspd = 0;
+    }
+
     // gravity only: sideways motion comes from the pair push
     yspd = min(yspd + grav, max_fall);
     move_collide();
